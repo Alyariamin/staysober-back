@@ -11,6 +11,10 @@ djoser = "*"
 djangorestframework-simplejwt = "*"
 drf-nested-routers = "*"
 django-cors-headers = "*"
+psycopg2-binary = "*"
+dj-database-url = "*"
+gunicorn = "*"
+uvicorn = "*"
 
 [dev-packages]
 
