@@ -15,6 +15,7 @@ psycopg2-binary = "*"
 dj-database-url = "*"
 gunicorn = "*"
 uvicorn = "*"
+whitenoise = {extras = ["brotli"], version = "*"}
 
 [dev-packages]
 
