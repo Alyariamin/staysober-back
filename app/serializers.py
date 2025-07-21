@@ -28,8 +28,8 @@ class UpdateJournalSerializer(serializers.ModelSerializer):
         fields = ['content','mood','triggers','date']
 
 class GoalSerializer(serializers.ModelSerializer):
-    targetDate = serializers.DateField(source='target_date')
-    createdAt = serializers.DateField(source='created_at')
+    targetDate = serializers.DateField(source='target_date',required=False,allow_null=True)
+    createdAt = serializers.DateField(source='created_at',required=False)
     class Meta:
         model = Goal
         fields = ['id','title', 'description', 'targetDate', 'completed','createdAt']
@@ -37,6 +37,8 @@ class GoalSerializer(serializers.ModelSerializer):
         profile = Profile.objects.get(user_id=self.context['user_id'])
         print(validated_data)
         return Goal.objects.create(profile=profile, **validated_data)
+    def get_createdAt(self, obj):
+        return obj.created_at.isoformat()
 
 class UpdateGoalSerializer(serializers.ModelSerializer):
     targetDate = serializers.DateField(source='target_date')
