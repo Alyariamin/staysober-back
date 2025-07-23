@@ -14,4 +14,3 @@ urlpatterns = [
     path('auth/', include ('djoser.urls.jwt')),
    path('auth/change-password/', ChangePasswordView.as_view(), name='change-password'),
 ]
-

@@ -79,21 +79,21 @@ WSGI_APPLICATION = 'staysober.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-# pS = {
-#     'default': dj_database_url.config(
-#         default='postgresql://mysite:v4fovWSo01M1zSwz20L14LXVqDuPTQjt@dpg-d1ulov2dbo4c73eo8sd0-a/mysite_1l0p',
-#         conn_max_age=600
-#     )
-# }
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'staysober',
-        'HOST': 'localhost',
-        'USER': 'root',
-        'PASSWORD': '1234'
-    }
+    'default': dj_database_url.config(
+        default='postgresql://mysite:v4fovWSo01M1zSwz20L14LXVqDuPTQjt@dpg-d1ulov2dbo4c73eo8sd0-a/mysite_1l0p',
+        conn_max_age=600
+    )
 }
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'staysober',
+#         'HOST': 'localhost',
+#         'USER': 'root',
+#         'PASSWORD': '1234'
+#     }
+# }
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
