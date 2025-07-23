@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-utzrv!=zm02xk#e3eogk=mnpki^6%*7^osqixqp)a*ikipdpaf
 DEBUG = True
 
 ALLOWED_HOSTS = ['mysite-f1ym.onrender.com']
-ALLOWED_HOSTS=[]
+# ALLOWED_HOSTS=[]
 
 # Application definition
 
