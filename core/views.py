@@ -26,3 +26,4 @@ class ChangePasswordView(generics.UpdateAPIView):
         update_session_auth_hash(request, user)
         
         return Response({"status": "success", "message": "Password updated successfully"})
+    

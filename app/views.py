@@ -10,7 +10,8 @@ from django.shortcuts import get_object_or_404
 from datetime import date
  
 
-class ProfileViewSet(CreateModelMixin, UpdateModelMixin, RetrieveModelMixin, GenericViewSet):
+class ProfileViewSet(CreateModelMixin, UpdateModelMixin, RetrieveModelMixin,
+                      GenericViewSet):
     queryset = Profile.objects.all()
     serializer_class = ProfileSerializer
     permission_classes = [IsAuthenticated]
@@ -35,18 +36,11 @@ class ProfileViewSet(CreateModelMixin, UpdateModelMixin, RetrieveModelMixin, Gen
 class JournalViewSet(ModelViewSet):
     permission_classes = [IsAuthenticated]
     http_method_names = ['get', 'post', 'patch', 'delete', 'head', 'options']
+    serializer_class = JournalSerializer
     def get_serializer_context(self):
         return {'user_id': self.request.user.id}
-    def get_serializer_class(self):
-        if self.request.method == 'PATCH':
-            return UpdateJournalSerializer
-        return JournalSerializer
     def get_queryset(self):
         user = self.request.user
-
-        if user.is_staff:
-            return Journal.objects.all()
-        
         profile_id = Profile.objects.only('id').get(user_id=user.id)
         return Journal.objects.filter(profile_id=profile_id)
 
@@ -87,7 +81,6 @@ class HabitViewSet(ModelViewSet):
         profile= Profile.objects.get(user_id=self.request.user.id)
         habit = serializer.save(profile=profile)
         
-        # Return the full habit object including ID
         response_serializer = HabitSerializer(habit, context=self.get_serializer_context())
         headers = self.get_success_headers(response_serializer.data)
         return Response(
@@ -95,12 +88,6 @@ class HabitViewSet(ModelViewSet):
             status=status.HTTP_201_CREATED,
             headers=headers
         )       
-    # def perform_create(self, serializer):
-    #     user = self.request.user
-    #     profile = Profile.objects.get(user_id=user.id)
-    #     print(profile.id,profile.user_id)
-    #     serializer.save(profile=profile)
-            
     @action(detail=True, methods=['post'])
     def toggle(self, request, pk=None):
         habit = self.get_object()
@@ -168,38 +155,21 @@ class MoodViewSet(ModelViewSet):
     permission_classes=[IsAuthenticated]
     serializer_class=MoodSerializer
     http_method_names = ['get', 'post', 'put', 'delete', 'head', 'options']
-    # def create(self, request, *args, **kwargs):
-    #     print("Request body:", request.body)  # Raw body
-    #     print("POST data:", request.POST)     # Form data
-    #     print("GET data:", request.GET)       # Query params
-    #     return super().create(request, *args, **kwargs)
     def get_serializer_context(self):
         return {'user_id': self.request.user.id}
     def get_queryset(self):
         user = self.request.user
-
-        if user.is_staff:
-            return Mood.objects.all()
-        
         profile_id = Profile.objects.only('id').get(user_id=user.id)
         return Mood.objects.filter(profile_id=profile_id)
-
+    
 class CravingViewSet(ModelViewSet):
     permission_classes=[IsAuthenticated]
     serializer_class=CravingSerializer
     http_method_names = ['get', 'post', 'put', 'delete', 'head', 'options']
-    # def create(self, request, *args, **kwargs):
-    #     print("Request body:", request.body)  # Raw body
-    #     print("POST data:", request.POST)     # Form data
-    #     print("GET data:", request.GET)       # Query params
-    #     return super().create(request, *args, **kwargs)
     def get_serializer_context(self):
         return {'user_id': self.request.user.id}
     def get_queryset(self):
-        user = self.request.user
-
-        if user.is_staff:
-            return Craving.objects.all()
-        
+        user = self.request.user        
         profile_id = Profile.objects.only('id').get(user_id=user.id)
         return Craving.objects.filter(profile_id=profile_id)
+

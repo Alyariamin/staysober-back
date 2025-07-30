@@ -5,16 +5,9 @@ from django.db import models
 from django.utils import timezone
 
 class Profile(models.Model):
-
     start_date = models.DateTimeField(null=True, blank=True,default=timezone.now)
     saved_money = models.DecimalField(max_digits=6, decimal_places=2,default=0.00)
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    
-    def __str__(self):
-        return f'{self.user.first_name} {self.user.last_name}'
-
-    class Meta:
-        ordering = ['user__first_name', 'user__last_name']
 
 class Journal(models.Model):
     MOOD_GREAT = 'Great'
@@ -43,64 +36,40 @@ class Goal(models.Model):
     completed = models.BooleanField(blank=True,null=True)
     created_at = models.DateField(auto_now_add=True)
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
-
-# class Habit(models.Model):
-#     name = models.CharField(max_length=255)
-#     description = models.TextField()
-#     icon = models.CharField(max_length=255)
-#     color = models.CharField(max_length=255)
-#     streak = models.IntegerField()
-#     completed = models.BooleanField()
-#     created_at = models.DateField(auto_now_add=True)
-
 class Habit(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField(blank=True)
     icon = models.CharField(max_length=255)
     color = models.CharField(max_length=255)
-    created_at = models.DateField(auto_now_add=True,blank=True,null=True)
+    created_at = models.DateField(auto_now_add=True)
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
     
     @property
     def streak(self):
-        """
-        Calculate the current streak based on consecutive completed days.
-        A streak continues if the habit was completed yesterday, 
-        the day before yesterday, etc. without gaps.
-        """
         completions = list(self.completions.filter(completed=True)
                          .order_by('-date')
                          .values_list('date', flat=True))
-        
         if not completions:
             return 0
-            
         today = timezone.now().date()
         streak = 0
-        
-        # Check if habit was completed today
         if completions[0] == today:
             streak = 1
             completions = completions[1:]
         else:
-            return 0  # No streak if not completed today
-            
-        # Check previous days for consecutive completion
-        expected_date = today - timedelta(days=1)
-        
+            return 0
+        expected_date = today - timedelta(days=1)        
         for completion_date in completions:
             if completion_date == expected_date:
                 streak += 1
                 expected_date -= timedelta(days=1)
             else:
-                break  # Streak ends when we find a gap
-                
+                break
         return streak
 class HabitCompletion(models.Model):
     habit = models.ForeignKey(Habit, on_delete=models.CASCADE, related_name='completions')
     date = models.DateField()
     completed = models.BooleanField(default=True)
-    
     class Meta:
         unique_together = ('habit', 'date')
 
@@ -127,9 +96,10 @@ class Craving(models.Model):
     date = models.DateTimeField(blank=True,null=True)
     intensity = models.IntegerField()
     trigger = models.CharField(max_length=255,blank=True,null=True)
-    location = models.CharField(max_length=255,blank=True,null=True)
+    location = models.CharField(max_length=255)
     coping_strategy = models.CharField(max_length=255,blank=True,null=True)
     notes = models.TextField(blank=True,null=True)
-    duration = models.IntegerField(blank=True,null=True)
+    duration = models.IntegerField()
     overcome = models.BooleanField()
     profile = models.ForeignKey(Profile,on_delete=models.CASCADE)
+

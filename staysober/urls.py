@@ -8,9 +8,9 @@ from core.views import ChangePasswordView
 
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
     path('app/', include ('app.urls')),
     path('auth/', include ('djoser.urls')), 
     path('auth/', include ('djoser.urls.jwt')),
    path('auth/change-password/', ChangePasswordView.as_view(), name='change-password'),
+    path('admin/', admin.site.urls),
 ]
