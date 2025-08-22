@@ -81,8 +81,10 @@ WSGI_APPLICATION = 'staysober.wsgi.application'
 
 DATABASES = {
     'default': dj_database_url.config(
-        default='postgresql://mysite:v4fovWSo01M1zSwz20L14LXVqDuPTQjt@dpg-d1ulov2dbo4c73eo8sd0-a/mysite_1l0p',
+       # default='postgresql://mysite:v4fovWSo01M1zSwz20L14LXVqDuPTQjt@dpg-d1ulov2dbo4c73eo8sd0-a/mysite_1l0p',
+        default='postgresql://soberdb_syt9_user:BPsYuHDdtTE5PfMBAYeccS594CfEJlZQ@dpg-d2k1rlbuibrs73ed63s0-a.oregon-postgres.render.com/soberdb_syt9',
         conn_max_age=600
+        
     )
 }
 # DATABASES = {
