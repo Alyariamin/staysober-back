@@ -1,20 +1,20 @@
 databases:
-  - name: mysitedb
+  - name: soberdb_syt9
     plan: free
-    databaseName: mysite
-    user: mysite
+    databaseName: staysober
+    user: soberdb_syt9_user
 
 services:
   - type: web
     plan: free
-    name: mysite
+    name: staysober
     runtime: python
     buildCommand: './build.sh'
     startCommand: 'python -m gunicorn staysober.asgi:application -k uvicorn.workers.UvicornWorker'
     envVars:
       - key: DATABASE_URL
         fromDatabase:
-          name: mysitedb
+          name: soberdb_syt9
           property: connectionString
       - key: SECRET_KEY
         generateValue: true
